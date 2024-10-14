@@ -1,12 +1,15 @@
-import fs from 'fs';
+import { promises as fs } from 'fs';
+
 export const remove = async (filePath) => {
     try {
-        if (!fs.existsSync(filePath)) {
-            throw new Error('FS operation failed');
-        }
-        await fs.promises.rm(filePath);
-        console.log('File deleted!');
+        await fs.stat(filePath);
+        await fs.rm(filePath);
+        console.log('file deleted!');
     } catch (error) {
-        console.error(error.message);
+        if (error.code === 'ENOENT') {
+            console.error('FS operation failed: file does not exist');
+        } else {
+            console.error('Operation failed:', error.message);
+        }
     }
 };

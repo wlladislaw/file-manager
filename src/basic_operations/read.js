@@ -1,5 +1,5 @@
 import fs from 'fs';
-export const read = async (filePath) => {
+export const read = async (filePath, logDir) => {
     try {
         const stream = fs.createReadStream(filePath, 'utf8');
         stream.on('readable', () => {
@@ -8,6 +8,7 @@ export const read = async (filePath) => {
         });
         stream.on('end', () => {
             console.log('\n');
+            logDir();
         });
         stream.on('error', () => {
             console.log('Operation failed while read');

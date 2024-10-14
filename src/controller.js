@@ -86,7 +86,7 @@ const controllerMap = {
     cat: {
         exec: async (file) => {
             const pathFile = path.join(currentDirectory, file);
-            await read(pathFile);
+            await read(pathFile, () => printDir(currentDirectory));
         },
         args: 1,
     },
@@ -160,10 +160,9 @@ export const controller = async (input) => {
             await exec(...args);
         } catch (error) {
             console.log('Operation failed', error.message);
-        } finally {
-            printDir(currentDirectory);
         }
     } else {
         console.log('Invalid input');
     }
+    printDir(currentDirectory);
 };

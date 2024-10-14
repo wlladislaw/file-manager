@@ -1,14 +1,16 @@
 import { createReadStream, createWriteStream } from 'fs';
 import { createBrotliCompress } from 'zlib';
+import { pipeline } from 'stream/promises';
+
 export const compress = async (currPath, newPath) => {
     const br = createBrotliCompress();
     const input = createReadStream(currPath, { encoding: 'utf-8' });
     const res = createWriteStream(newPath);
-    input.pipe(br).pipe(res);
-    res.on('finish', () => {
+
+    try {
+        await pipeline(input, br, res);
         console.log('file compressed!');
-    });
-    br.on('error', (err) => {
-        console.error(`error compression: ${err.message}`);
-    });
+    } catch (err) {
+        console.error(`Error during compression: ${err.message}`);
+    }
 };
